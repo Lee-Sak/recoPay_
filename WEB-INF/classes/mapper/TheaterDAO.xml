@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+
+	예매 시 좌석 정보 저장(TheaterDAO.XML)
+	- insertSeat(좌석,극장이름,유저아이디)
+	
+	이미 예약된 좌석들 리스트 가져오기(TheaterDAO.xml)
+	- getBookedSeats 
+	
+	남은 좌석 수 가져오기 (TheaterDAO.xml)
+	getLeftSeat(극장이름)
+
+-->
+
+
+
+<mapper namespace="com.spring.recopay.domain.TheaterDAO">
+
+	<select id="select" resultType="com.spring.recopay.domain.TheaterDTO">
+	<![CDATA[ 
+		SELECT th_uid "uid", th_id "id", th_name "name", th_location "location", th_totalseat "totalseat", th_state "state", 
+		th_telno "telno", th_chartr "chartr", th_lng "lng", th_lat "lat", th_url "url", th_totalno "totalno",th_opendate "opendate"
+		FROM (SELECT * FROM Theater) where rownum < 800
+	]]>	
+	</select> 
+	
+	<select id="viewById" resultType="com.spring.recopay.domain.TheaterDTO">
+	SELECT th_uid "uid", th_id "id", th_name "name", th_location "location", th_totalseat "totalseat", th_state "state", 
+	th_telno "telno", th_chartr "chartr", th_lng "lng", th_lat "lat", th_url "url", th_totalno "totalno",th_opendate "opendate"
+	FROM Theater where th_id = #{id}
+	</select>
+	
+	<!-- 연극 uid 넘겨주면 지도 X,Y 좌표 가져오기  -->
+	<select id="getMapCordXY" resultType="com.spring.recopay.domain.TheaterDTO">
+		SELECT th_lat "lat", th_lng "lng" FROM theater WHERE th_name = (select prf_fcltynm from Perform where prf_uid = #{uid})
+	</select>
+	
+
+
+
+	<!-- 선택한 좌석 insert -->
+    <insert id="insertSeat">
+		insert into Theater_Seat (seat_uid, seat_num , th_uid , user_uid , prf_time) values
+ 		 (theater_seat_seq.nextval, #{param1}, (SELECT th_uid from Theater where th_name = #{param2} ) , 
+    	 (SELECT user_uid from Member where user_id = #{param3}) , #{param4})
+    </insert>
+    
+    <!-- 
+		insert into Theater_Seat (seat_num , th_uid , user_uid , prf_time) values
+ 		 (#{seat}, (SELECT th_uid from Theater where th_name = #{theaterName} ) , 
+    	 (SELECT user_uid from Member where user_id = #{userId}) , #{time})
+     -->
+	
+	<!-- 예약된 좌석들 정보 가져오기 -->
+	<select id="getAllBookedSeats" resultType="com.spring.recopay.domain.TheaterSeatDTO">
+		SELECT seat_num "seat", th_uid, user_uid, prf_time "time" FROM Theater_Seat
+	</select>
+	
+		<!-- 예약된 좌석들 정보 가져오기 -->
+	<select id="getBookedSeatsByNameAndTime" resultType="com.spring.recopay.domain.TheaterSeatDTO">
+			SELECT seat_num "seat", th_uid, user_uid, prf_time "time" FROM Theater_Seat where prf_time = #{param1} 
+		 and th_uid = (select th_uid from theater where th_name = #{param2})
+	</select>
+	
+	<!-- 남은 좌석 수 가져오기 -->
+	<select id="getLeftSeat" resultType="com.spring.recopay.domain.TheaterSeatDTO">
+		<![CDATA[ 
+			SELECT count(seat_num) "bookedSeat", PRF_TIME "time", prf_uid FROM  
+			(SELECT t.TH_UID, ts.SEAT_NUM, ts.PRF_TIME, p2.PRF_UID 
+			FROM THEATER t ,THEATER_SEAT ts , PERFORM p2
+			WHERE t.TH_UID = ts.TH_UID AND p2.PRF_FCLTYNM = t.TH_NAME) WHERE prf_uid = #{uid}
+			GROUP BY PRF_TIME, prf_uid
+		]]>	
+	</select>
+	
+	<select id="getTotalSeatByUid" resultType="com.spring.recopay.domain.TheaterSeatDTO">
+	<![CDATA[ 
+		select th_totalseat "totalSeat" from (select * from theater t, perform p where t.TH_ID = p.TH_UID) 
+		where PRF_UID = #{uid}
+	]]>	
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+

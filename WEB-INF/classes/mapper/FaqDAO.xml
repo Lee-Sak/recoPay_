@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Faq -->
+<mapper namespace="com.spring.recopay.domain.FaqDAO">
+	<select id="select" resultType="com.spring.recopay.domain.FaqDTO">
+	SELECT faq_uid "f_uid", faq_title "title", faq_content "content", faq_uploadedtime "uploadtime", faq_name "name", faq_viewcnt "viewcnt", 
+	user_uid "uid", faq_type "type"
+	FROM Faq
+	</select> 
+	
+	<!-- DB 테이블 -->
+	<select id="viewById" resultType="com.spring.recopay.domain.FaqDTO">
+	SELECT faq_uid "f_uid", faq_title "title", faq_content "content", faq_uploadedtime "uploadtime", faq_name "name", faq_viewcnt "viewcnt", 
+	user_uid "uid", faq_type "type""
+	FROM Faq where faq_uid = #{f_uid}
+	</select>
+	
+	<!-- 글작성 write -->
+	<insert id="insert" flushCache="true"
+	parameterType="com.spring.recopay.domain.FaqDTO">
+	INSERT INTO Faq_Board
+			(faq_f_uid, faq_title, faq_content, faq_name)
+		VALUES
+			(faq_seq.nextval, #{title}, #{content}, #{name})
+	</insert>
+	
+	<!-- 글 목록 notice -->
+	<select id="viewlist" resultType="com.spring.recopay.domain.FaqDTO">
+	SELECT faq_f_uid "f_uid", faq_title "title", faq_content "content", faq_name "name", faq_viewcnt "viewcnt", faq_uploadedtime "uploadtime"
+	FROM Faq_Board
+	ORDER BY faq_f_uid DESC
+	</select>
+	
+	<!-- 글 보기 view -->
+	<select id="viewByUid" resultType="com.spring.recopay.domain.FaqDTO">
+	SELECT faq_f_uid "f_uid", faq_title "title", faq_content "content", faq_name "name", faq_viewcnt "viewcnt", faq_uploadedtime "uploadtime"
+	FROM Faq_Board
+	WHERE faq_f_uid = #{f_uid}
+	</select>
+	
+	
+	<!-- 조회수 증가 부분 id='incViewCnt' -->
+	<update id="incViewCnt" flushCache="true">
+		UPDATE Faq_Board 
+		SET faq_viewcnt = faq_viewcnt + 1 
+		WHERE faq_f_uid = #{param1}
+	</update>
+	
+	<!-- 수정 부분 id='update' -->
+		<update id="update" flushCache="true" 
+		parameterType="com.spring.recopay.domain.FaqDTO">
+		UPDATE Faq_Board 
+		SET faq_title = #{a.title }, faq_content = #{a.content } 
+		WHERE faq_f_uid = #{param1}
+	</update>
+	
+	<!-- 삭제 부분 id='deleteByUid' -->
+ 	<delete id="deleteByUid" flushCache="true">
+		DELETE FROM Faq_Board WHERE faq_f_uid = #{f_uid}
+	</delete>
+</mapper>

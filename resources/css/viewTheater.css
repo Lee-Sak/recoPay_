@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+.titleSize {
+	font-size: 45px !important;
+}
+
+.pageSize {
+	font-size: 20px !important;
+}
+
+.boldFont {
+	font-weight: bolder;
+	display: inline-block;
+	width: 10%	
+	
+}
+
+.pFont{
+	width: 50%;
+	display: inline-block;
+	
+}
+
+.searchBtn {
+  background-color: #FFFFFF;
+  border: 1px solid;
+  color: black;
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 20px;
+  margin: 4px 8px 10px 1px;
+  opacity: 0.6;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  float: right;
+}
+
+.searchBtn:hover {
+	opacity: 1;
+	background-color: #FF6448;
+	color: white;
+	border: none;
+}
+
+p {
+	font-size: 18px;
+}

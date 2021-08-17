@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.recopay.domain.EventDAO">
+	
+	<select id="selectAllListOrderedByRemaindayAsc" resultType="com.spring.recopay.domain.EventDTO">
+	<![CDATA[ 
+		SELECT event_uid "uid", event_title "title", event_contents "contents", event_img "img", 
+		user_uid "user_uid", TO_DATE(TO_CHAR(event_startdate,'YYYY-MM-DD')) "startdate" , 
+		TO_DATE(TO_CHAR(event_enddate,'YYYY-MM-DD')) "enddate", 
+		event_isfinish "isfinish", (event_enddate - event_startdate) AS remainday, 
+		(TO_DATE(TO_CHAR(event_enddate,'YYYY-MM-DD')) - TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'))) AS remainfromtoday, 
+		(1-((TO_DATE(TO_CHAR(event_enddate,'YYYY-MM-DD')) - TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD')))/(event_enddate - event_startdate)))*100 AS percentage
+		FROM EVENT_BOARD 
+		ORDER BY percentage ASC
+	]]>	
+	</select>
+	
+	<!-- isfinish 세팅 -->
+	<update id="setIsfinish" flushCache="true">
+	<![CDATA[
+		UPDATE EVENT_BOARD 
+		SET event_isfinish = 1  
+		WHERE (TO_DATE(TO_CHAR(event_enddate,'YYYY-MM-DD')) - TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'))) < 0 
+	]]>	
+	</update>
+	
+	<select id="countIsfinished" resultType="com.spring.recopay.domain.EventDTO">
+	<![CDATA[ 
+		SELECT 
+			(SELECT count(*) FROM EVENT_BOARD) total,
+			(SELECT count(*) FROM EVENT_BOARD WHERE EVENT_ISFINISH = 1) AS finished,
+			(SELECT count(*) FROM EVENT_BOARD WHERE EVENT_ISFINISH = 0) AS ongoing 
+		FROM dual
+	]]>	
+	</select>
+	
+	
+</mapper>
+

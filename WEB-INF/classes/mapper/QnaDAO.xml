@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Qna -->
+<mapper namespace="com.spring.recopay.domain.QnaDAO">
+	<select id="select" resultType="com.spring.recopay.domain.QnaDTO">
+	SELECT qna_uid "q_uid", user_uid "uid", qna_title "title", qna_content "content", qna_uploadedtime "uploadtime", qna_name "name", qna_viewcnt "viewcnt", 
+	 qna_answer "answer"
+	FROM Qna
+	</select> 
+	
+	<!-- DB 테이블 -->
+	<select id="viewById" resultType="com.spring.recopay.domain.QnaDTO">
+	SELECT qna_uid "q_uid", user_uid "uid", qna_title "title", qna_content "content", qna_uploadedtime "uploadtime", qna_name "name", qna_viewcnt "viewcnt", 
+	 qna_answer "answer"
+	FROM Qna where qna_uid = #{q_uid}
+	</select>
+	
+	<!-- 글작성 write -->
+	<insert id="insert" flushCache="true"
+	parameterType="com.spring.recopay.domain.QnaDTO">
+	INSERT INTO Qna_Board
+			(qna_q_uid, qna_title, qna_content, qna_name)
+		VALUES
+			(qna_seq.nextval, #{title}, #{content}, #{name})
+	</insert>
+	
+	<!-- 글 목록 notice -->
+	<select id="viewlist" resultType="com.spring.recopay.domain.QnaDTO">
+	SELECT qna_q_uid "q_uid", qna_title "title", qna_content "content", qna_name "name", qna_viewcnt "viewcnt", qna_uploadedtime "uploadtime"
+	FROM Qna_Board
+	ORDER BY qna_q_uid DESC
+	</select>
+	
+	<!-- 글 보기 view -->
+	<select id="viewByUid" resultType="com.spring.recopay.domain.QnaDTO">
+	SELECT qna_q_uid "q_uid", qna_title "title", qna_content "content", qna_name "name", qna_viewcnt "viewcnt", qna_uploadedtime "uploadtime"
+	FROM Qna_Board
+	WHERE qna_q_uid = #{q_uid}
+	</select>
+	
+	
+	<!-- 조회수 증가 부분 id='incViewCnt' -->
+	<update id="incViewCnt" flushCache="true">
+		UPDATE Qna_Board 
+		SET qna_viewcnt = qna_viewcnt + 1 
+		WHERE qna_q_uid = #{param1}
+	</update>
+	
+	<!-- 수정 부분 id='update' -->
+		<update id="update" flushCache="true" 
+		parameterType="com.spring.recopay.domain.QnaDTO">
+		UPDATE Qna_Board 
+		SET qna_title = #{a.title }, qna_content = #{a.content } 
+		WHERE qna_q_uid = #{param1}
+	</update>
+	
+	<!-- 삭제 부분 id='deleteByUid' -->
+ 	<delete id="deleteByUid" flushCache="true">
+		DELETE FROM Qna_Board WHERE qna_q_uid = #{q_uid}
+	</delete>
+</mapper>

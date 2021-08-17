@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- NOTICE -->
+<mapper namespace="com.spring.recopay.domain.ServiceCenterDAO">
+	<select id="select" resultType="com.spring.recopay.domain.ServiceCenterDTO">
+	SELECT notice_uid "n_uid", notice_title "title", notice_content "content", notice_uploadtime "uploadtime", notice_name "name", notice_viewcnt "viewcnt", 
+	user_uid "uid", notice_type "type"
+	FROM Notice
+	</select> 
+	
+	<!-- DB 테이블 -->
+	<select id="viewById" resultType="com.spring.recopay.domain.ServiceCenterDTO">
+	SELECT notice_uid "n_uid", notice_title "title", notice_content "content", notice_uploadtime "uploadtime", notice_name "name", notice_viewcnt "viewcnt", 
+	user_uid "uid", notice_type "type"
+	FROM Notice where notice_uid = #{n_uid}
+	</select>
+	
+	<!-- 글작성 write -->
+	<insert id="insert" flushCache="true"
+	parameterType="com.spring.recopay.domain.ServiceCenterDTO">
+	INSERT INTO Notice_Board
+			(notice_n_uid, notice_title, notice_content, notice_name)
+		VALUES
+			(notice_seq.nextval, #{title}, #{content}, #{name})
+	</insert>
+	
+	<!-- 글 목록 notice -->
+	<select id="viewlist" resultType="com.spring.recopay.domain.ServiceCenterDTO">
+	SELECT notice_n_uid "n_uid", notice_title "title", notice_content "content", notice_name "name", notice_viewcnt "viewcnt", notice_uploadedtime "uploadtime"
+	FROM Notice_Board
+	ORDER BY notice_n_uid DESC
+	</select>
+	
+	<!-- 글 보기 view -->
+	<select id="viewByUid" resultType="com.spring.recopay.domain.ServiceCenterDTO">
+	SELECT notice_n_uid "n_uid", notice_title "title", notice_content "content", notice_name "name", notice_viewcnt "viewcnt", notice_uploadedtime "uploadtime"
+	FROM Notice_Board
+	WHERE notice_n_uid = #{n_uid}
+	</select>
+	
+	
+	<!-- 조회수 증가 부분 id='incViewCnt' -->
+	<update id="incViewCnt" flushCache="true">
+		UPDATE Notice_Board 
+		SET notice_viewcnt = notice_viewcnt + 1 
+		WHERE notice_n_uid = #{param1}
+	</update>
+	
+	<!-- 수정 부분 id='update' -->
+		<update id="update" flushCache="true" 
+		parameterType="com.spring.recopay.domain.ServiceCenterDTO">
+		UPDATE Notice_Board 
+		SET notice_title = #{a.title }, notice_content = #{a.content } 
+		WHERE notice_n_uid = #{param1}
+	</update>
+	
+	<!-- 삭제 부분 id='deleteByUid' -->
+ 	<delete id="deleteByUid" flushCache="true">
+		DELETE FROM Notice_Board WHERE notice_n_uid = #{n_uid}
+	</delete>
+
+</mapper>

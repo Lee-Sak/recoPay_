@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.recopay.domain.ReservationDAO">
+   
+    <!-- 티켓 구입  -->
+    <insert id="insertBuyingTicket">
+     insert into Reservation (res_id, res_prfdate, res_title, 
+     res_payment, user_id, res_seat,res_ticketnum)
+      values(concat(TO_CHAR(SYSDATE,'YYYY-MMDD-'),reservation_seq.nextval),
+       #{prfdate}, #{title}, #{payment}, #{user_id} , #{seat},#{ticketnum} )   
+    </insert>
+
+ 
+     <!-- 구매한 내역 조회   -->
+    <insert id="ttt">
+     insert into Member (res_id, res_prfdate, res_title, res_payment, user_uid, res_isfinished, res_seat,)
+      values(member_seq.nextval, #{username}, #{password}, #{name}, #{emailbf} , #{addr}, #{call})   
+    </insert>
+    
+
+    <select id="getAllNotFinishedPerform" resultType="com.spring.recopay.domain.PerformDTO">
+    	
+		SELECT PRF_UID "uid",prf_name "name" , TO_CHAR(TO_DATE(prf_to) ,'YYYY-MM-DD') AS startDay, TO_CHAR(TO_DATE(prf_from) ,'YYYY-MM-DD') AS endDay  
+		FROM perform 
+		WHERE PRF_STATE = '공연중'	
+    	
+    </select>
+
+    <select id="mypageByUserid" resultType="com.spring.recopay.domain.MypageDTO">
+	SELECT ts.seat_uid "seatUid", t.th_name "thName", t.TH_LOCATION "thLocation", ts.seat_num "seatNum", ts.prf_time "prfTime", kk.prf_name "prfName" FROM theater t, theater_seat ts, MEMBER m,
+	(SELECT DISTINCT p.prf_name, p.prf_id, a.th_id FROM 
+	(SELECT t.th_id FROM theater_seat ts, theater t
+	WHERE ts.th_uid = t.TH_UID) a, perform p
+	WHERE a.th_id = p.th_uid AND p.prf_state = '공연중') kk
+	WHERE t.th_uid = ts.th_uid AND m.USER_ID = #{uesrid} AND kk.th_id = t.th_id
+	ORDER BY seat_uid desc
+	</select>
+	
+	<delete id="deleteSeatid"> 
+        DELETE FROM theater_seat WHERE seat_uid = #{uid} 
+    </delete>
+
+</mapper>

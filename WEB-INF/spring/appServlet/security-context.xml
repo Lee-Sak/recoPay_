@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+
+
+	<bean id="customAccessDenied" class="com.spring.recopay.controller.CustomAccessDeniedHandler"/>
+	<bean id="customLoginSuccess" class="com.spring.recopay.controller.CustomLoginSuccessHandler"/>
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>	
+
+	<security:http>
+
+		<security:intercept-url pattern = "/reservation/reservation/*" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/perform/**" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/servicecenter/qna/**" access = "isAuthenticated()"/>
+		
+		<security:intercept-url pattern = "/servicecenter/faq/view" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/servicecenter/faq/faq" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/servicecenter/faq/**" access = "hasRole('ROLE_ADMIN')"/>
+	
+		<security:intercept-url pattern = "/servicecenter/notice/view" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/servicecenter/notice/notice" access = "isAuthenticated()"/>
+		<security:intercept-url pattern = "/servicecenter/notice/**" access = "hasRole('ROLE_ADMIN')"/>
+		
+		<security:intercept-url pattern="/**" access="permitAll" />
+
+		
+
+		<security:form-login login-page="/login/login" authentication-success-handler-ref="customLoginSuccess"/>
+
+		<security:access-denied-handler ref="customAccessDenied"/>
+
+		<security:logout logout-url="/login/logout" invalidate-session="true"/>
+
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+
+			<security:jdbc-user-service data-source-ref="dataSource"
+			users-by-username-query=
+				"SELECT user_id username,user_password password, user_enabled enabled FROM Member WHERE user_id = ?"
+			authorities-by-username-query=
+				"SELECT user_id username, user_auth authority FROM Member WHERE user_id = ?"
+			 />
+
+			 <security:password-encoder ref="bcryptPasswordEncoder"/> 
+
+		</security:authentication-provider>
+	</security:authentication-manager>	
+
+</beans> 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.recopay.domain.MemberDAO">
+   
+    <!-- 회원 가입 -->
+    <insert id="register">
+     insert into Member (user_uid, user_id, user_password, user_name, user_email, user_addr, user_isCall)
+      values(member_seq.nextval, #{username}, #{password}, #{name}, #{emailbf} , #{addr2}, #{call})   
+    </insert>
+    
+    <select id="checkSignup" resultType="int">
+  	
+  		select count(*) from Member where user_id = #{username}
+  	
+  	</select>
+	
+	
+	<!-- 회원 가입 -->
+    <!-- <insert id="registerMember">
+     insert into Member
+      values(#{username}, #{password}, 1, #{auth})   
+    </insert>-->
+
+	<!-- <select id="login" resultType="com.spring.recopay.domain.MemberDTO">
+	select username, password from Member where username = #{username} and password = #{password}
+	
+	</select>-->
+</mapper>

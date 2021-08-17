@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.recopay.domain.PerformDAO">
+
+	<select id="select" resultType="com.spring.recopay.domain.PerformDTO">
+	SELECT prf_uid "uid", prf_id "id", prf_name "name", prf_from "from", prf_to "to", prf_fcltynm "fcltynm", 
+	prf_poster "poster", prf_state "state", prf_openrun "openrun", th_uid "tuid"
+	FROM Perform
+	WHERE prf_state = '공연중'
+	ORDER BY prf_from DESC
+	</select> 
+	
+	
+	<select id="viewByUid" resultType="com.spring.recopay.domain.PerformDTO">
+	SELECT prf_uid "uid", prf_id "id", prf_name "name", prf_from "startDay", prf_to "endDay", prf_fcltynm "fcltynm", 
+	prf_poster "poster", prf_state "state", prf_openrun "openrun", th_uid "tuid",prf_ticketprice "ticketprice", prf_runday "runday", prf_runtime "runtime" 
+	FROM Perform
+	WHERE prf_uid=#{uid}
+	</select>
+	
+	<select id="recByUser" resultType="com.spring.recopay.domain.RecoDTO">
+	SELECT b2.prf_name "prfname", b2.prf_id "prfid", a2.relprf_id "relprfid", 
+	a2.sim "sim", a2.prf_name "relprfname", a2.prf_poster "relprfposter", a2.prf_uid "reluid", a2.PRF_FCLTYNM "relprffacilty" 
+	FROM
+	Perform b2,
+	(SELECT a1.prf_id, a1.relprf_id, sim, b1.prf_uid, b1.prf_name, b1.PRF_FCLTYNM, b1.PRF_POSTER
+	from
+	(SELECT * from
+	performRec a,(SELECT wr_prfid FROM test_write WHERE WR_SCORE >= 3 AND 
+	WR_NAME = (SELECT USER_NAME FROM MEMBER WHERE user_id = #{userid})) b
+	WHERE a.PRF_ID = b.wr_prfid) a1, Perform b1
+	WHERE a1.relprf_id = b1.prf_id ) a2
+	WHERE a2.prf_id = b2.prf_id
+	ORDER BY b2.prf_id, sim desc
+	</select>
+	
+
+	
+</mapper>
