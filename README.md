@@ -31,6 +31,8 @@
 
 - AJAX를 사용한 동적 게시판
 - CRUD 사이클 구현
+- 직접 구현한 REST API 서버에 AJAX 기법으로 필요한 데이터 요청하여 비동기 방식으로 전송 및 업데이트
+
 
 <br/>
 <p align="center"> <img src="img/th_5.JPG"></img> </p>
@@ -139,11 +141,27 @@
 
 
 ## 사용 기술
-...
-ㅋㅋㅋㅋ
+FrontEnd
+- JS, HTML, CSS
+- JQuery, Bototstrap
+
+BackEnd
+- Java
+  - JSP, EL, JSTL
+  - MyBatis, AJAX
+  - Spring JDBC, Spring Security, Spring RestAPI
+- Python
+  - OCR of Google Vision API
+  - Mecab of eunjeon Library
+  - Doc2vec of gensim Libaray
+
 
 ## 개발 환경
-...
+- Java, Spring FrameWork, Eclipse
+- Apache Tomcat (WAS)
+- Python, Jupyter Notebook, PyCharm
+- Window 10 (OS)
+- Oracle (DB)
 
 ## 후기
 전체적으로 모든 파트에 관여했으며, 집중하여 전담한 파트는 연극소개, 연극추천, 후기게시판이다. 초중반에 내게 주어진 파트에 집중하여 구현을 마치고, 다른 팀원들을 도와주며 다른 파트에 대한 지식을 쌓아 모든 파트를 구현할 수 있는 자신감이 생겼다. 
