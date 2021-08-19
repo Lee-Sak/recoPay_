@@ -90,7 +90,7 @@
 ### [예매하기] 
 <hr/>
 
-<p align="center"> <img src="img/th_11.JPG"></img> </p>
+<p align="center"> <img src="img/th_11.jpg"></img> </p>
 
 - 예매하기 버튼을 눌러 예매 가능
 - 연극의 대한 정보는 연극소개 버튼으로 확인 
