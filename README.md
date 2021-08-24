@@ -148,7 +148,7 @@ FrontEnd
 BackEnd
 - Java
   - JSP, EL, JSTL
-  - MyBatis, AJAX
+  - MyBatis, AJAX, jQuery
   - Spring JDBC, Spring Security, Spring RestAPI
 - Python
   - OCR of Google Vision API
