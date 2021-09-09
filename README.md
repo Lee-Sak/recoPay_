@@ -143,12 +143,12 @@
 ## 사용 기술
 FrontEnd
 - JS, HTML, CSS
-- JQuery, Bototstrap
+- JQuery, AJAX, Bototstrap
 
 BackEnd
 - Java
   - JSP, EL, JSTL
-  - MyBatis, AJAX, jQuery
+  - MyBatis
   - Spring JDBC, Spring Security, Spring RestAPI
 - Python
   - OCR of Google Vision API
